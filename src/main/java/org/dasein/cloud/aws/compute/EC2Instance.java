@@ -1091,7 +1091,9 @@ public class EC2Instance implements VirtualMachineSupport {
             int i = 1;
 
             for( String id : ids ) {
-                parameters.put("SecurityGroupId." + (i++), id);
+//            	String paramName = "SecurityGroupId";
+            	String paramName = "SecurityGroup";
+                parameters.put(paramName + "." + (i++), id);
             }
         }
         if( cfg.getDataCenterId() != null ) {
