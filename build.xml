@@ -1,0 +1,108 @@
+<project name="dasein-cloud-aws" basedir="." default="jar.core">
+
+	<property name="name" value="dasein-cloud-aw" />
+	<property file="${user.home}/${name}.properties"/>
+	<property file="${user.home}/build.properties"/>
+	<property name="config.filename" value="${user.name}.properties"/>
+	<property file="${config.filename}"/>
+	<property file="build.properties"/>
+
+  <property name="project.base.dir" value="."/>
+  <property name="src" value="${project.base.dir}/src"/>
+  <property name="test" value="${project.base.dir}/test"/>
+  <property name="build" value="${project.base.dir}/build"/>
+  <property name="classes" value="${build}/classes"/>
+  <property name="jar.dir" value="${project.base.dir}/build/lib/"/>
+  <property name="build.lib" value="${build}/lib"/>
+  <property name="external" location="${build}/external"/>
+  <property name="external.dir" location="${external}" />
+  <property name="external.lib" location="${external}/lib"/>
+  <property name="tough.core.dir" value="../ToughCore" />
+  <property name="tough.resources.dir" value="../ToughResources/" />
+  <property name="hudson.url" value="hermes.momentumsoftware.com:8080/" />
+
+  <import file="../ToughResources/common.build.xml" />
+
+  <path id="core.class.path">
+  	<!--
+    <fileset dir="${project.base.dir}/lib">
+        <include name="**/*.jar"/>
+    </fileset>
+    -->
+    <fileset dir="${external.lib}">
+        <include name="**/*.jar"/>
+    </fileset>
+    <pathelement path="${java.class.path}"/>
+  </path>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+    <mkdir dir="${build.lib}"/>
+    <mkdir dir="${external}"/>
+    <mkdir dir="${external.lib}"/>
+    <mkdir dir="${classes}"/>
+  </target>
+
+   <property name="dasein-cloud-core" value="dasein-cloud-core${dist.suffix}" />
+    <property name="dasein-cloud-core.dir" value="${project.base.dir}/../${dasein-cloud-core}"/>
+
+        <target name="copy-dependencies-hudson" depends="init" unless="is.development">
+                        <dependencies-hudson project.build.number="lastSuccessfulBuild">
+                         <dependencies>
+                    <get src="http://${hudson.url}/job/${dasein-cloud-core}/@{project.build.number}/artifact/build/lib/dasein-cloud-core.jar" dest="${external.jars}/dasein-cloud-core.jar" />
+                        </dependencies>
+                        </dependencies-hudson>
+                </target>
+
+        <target name="copy-dependencies-dev" depends="init" if="is.development">
+                <dependencies-dev >
+                        <dependencies>
+                <copy toFile="${external.jars}/dasein-cloud-core.jar" file="${elasticachecore.dir}/build/lib/dasein-cloud-core.jar"/>
+                        </dependencies>
+                </dependencies-dev>
+        </target>
+
+
+  <target name="compile.src" depends="init,copy-dependencies-dev, copy-dependencies-hudson">
+    <javac debug="on" memoryMaximumSize="256m" memoryInitialSize="256m" fork="true" destdir="${classes}" srcdir="${src}">
+    <classpath>
+        <pathelement location="${build.lib}/tough-core.jar" />
+        <pathelement location="${external.lib}/hibernate-jpa-2.0-api-1.0.0.Final.jar" />
+        <pathelement location="${external.lib}/hibernate3.jar" />
+        <path refid="core.class.path"/>
+    </classpath>
+    </javac>
+  </target>
+
+  <target name="compile.test" depends="compile.src">
+    <javac debug="on" memoryMaximumSize="256m" memoryInitialSize="256m" fork="true" destdir="${classes}">
+      <src path="${test}"/>
+    </javac>
+  </target>
+
+  <target name="jar.core" depends="init,compile.src">
+    <jar destfile="${jar.dir}/${name}.jar">
+      <fileset excludes="**/Test.class" dir="${classes}"/>
+    </jar>
+  </target>
+
+  <target name="main">
+  </target>
+
+  <target name="clean">
+    <delete dir="${project.base.dir}/build" />
+    <delete dir="${project.base.dir}/classes" />
+  </target>
+
+  <target name="findbugs" depends="jar.core">
+    <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+    <findbugs home="${findbugs.home}"
+          output="xml:withMessages"
+          outputFile="findbugs.xml" >
+      <auxClasspath path="${basedir}/lib/Regex.jar" />
+      <sourcePath path="${basedir}/src/java" />
+      <class location="${basedir}/bin/bcel.jar" />
+    </findbugs>
+  </target>
+
+</project>
