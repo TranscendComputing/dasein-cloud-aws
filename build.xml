@@ -1,6 +1,6 @@
 <project name="dasein-cloud-aws" basedir="." default="jar.core">
 
-	<property name="name" value="dasein-cloud-aw" />
+	<property name="name" value="dasein-cloud-aws" />
 	<property file="${user.home}/${name}.properties"/>
 	<property file="${user.home}/build.properties"/>
 	<property name="config.filename" value="${user.name}.properties"/>
