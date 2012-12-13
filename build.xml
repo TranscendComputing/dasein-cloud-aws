@@ -53,8 +53,6 @@
     <get src="http://${hudson.url}/job/${toughresources}/lastSuccessfulBuild/artifact/build/lib/tough-resources.zip" dest="${external}/tough-resources.zip" />
     <unzip dest="${external.lib}" src="${external}/tough-resources.zip"></unzip>
     <get src="http://${hudson.url}/job/${toughresources}/lastSuccessfulBuild/artifact/build/lib/tough-resources-config.zip" dest="${external}/tough-resources-config.zip" />
-    <get src="http://${hudson.url}/job/${toughcore}/lastSuccessfulBuild/artifact/build/lib/tough-core.jar" dest="${external.lib}/tough-core.jar" />
-
     <get src="http://${hudson.url}/job/${dasein-cloud-core}/lastSuccessfulBuild/artifact/build/lib/dasein-cloud-core.jar" dest="${external.lib}/dasein-cloud-core.jar" />
   </target>
 
