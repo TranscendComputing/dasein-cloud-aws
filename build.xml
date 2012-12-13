@@ -21,7 +21,10 @@
   <property name="tough.resources.dir" value="../ToughResources/" />
   <property name="hudson.url" value="hermes.momentumsoftware.com:8080/" />
 
-  <import file="../ToughResources/common.build.xml" />
+  <property name="dist.suffix" value="" />
+  <property name="toughresources" value="ToughResources${dist.suffix}" />
+  <property name="toughresources.dir" value="${project.base.dir}/../${toughresources}"/>
+  <import file="${toughresources.dir}/common.build.xml" />
 
   <path id="core.class.path">
   	<!--
@@ -43,24 +46,26 @@
     <mkdir dir="${classes}"/>
   </target>
 
-   <property name="dasein-cloud-core" value="dasein-cloud-core${dist.suffix}" />
-    <property name="dasein-cloud-core.dir" value="${project.base.dir}/../${dasein-cloud-core}"/>
+  <property name="dasein-cloud-core" value="dasein-cloud-core${dist.suffix}" />
+  <property name="dasein-cloud-core.dir" value="${project.base.dir}/../${dasein-cloud-core}"/>
 
-        <target name="copy-dependencies-hudson" depends="init" unless="is.development">
-                        <dependencies-hudson project.build.number="lastSuccessfulBuild">
-                         <dependencies>
-                    <get src="http://${hudson.url}/job/${dasein-cloud-core}/@{project.build.number}/artifact/build/lib/dasein-cloud-core.jar" dest="${external.lib}/dasein-cloud-core.jar" />
-                        </dependencies>
-                        </dependencies-hudson>
-                </target>
+  <target name="copy-dependencies-hudson" depends="init" unless="is.development">
+    <get src="http://${hudson.url}/job/${toughresources}/lastSuccessfulBuild/artifact/build/lib/tough-resources.zip" dest="${external}/tough-resources.zip" />
+    <unzip dest="${external.lib}" src="${external}/tough-resources.zip"></unzip>
+    <get src="http://${hudson.url}/job/${toughresources}/lastSuccessfulBuild/artifact/build/lib/tough-resources-config.zip" dest="${external}/tough-resources-config.zip" />
+    <get src="http://${hudson.url}/job/${toughcore}/lastSuccessfulBuild/artifact/build/lib/tough-core.jar" dest="${external.lib}/tough-core.jar" />
 
-        <target name="copy-dependencies-dev" depends="init" if="is.development">
-                <dependencies-dev >
-                        <dependencies>
-                <copy toFile="${external.lib}/dasein-cloud-core.jar" file="${elasticachecore.dir}/build/lib/dasein-cloud-core.jar"/>
-                        </dependencies>
-                </dependencies-dev>
-        </target>
+    <get src="http://${hudson.url}/job/${dasein-cloud-core}/lastSuccessfulBuild/artifact/build/lib/dasein-cloud-core.jar" dest="${external.lib}/dasein-cloud-core.jar" />
+  </target>
+
+  <target name="copy-dependencies-dev" depends="init" if="is.development">
+    <copy todir="${external}" file="${toughresources.dir}/build/lib/tough-resources.zip"></copy>
+    <unzip dest="${external.lib}" src="${external}/tough-resources.zip"></unzip>
+    <copy todir="${external}" file="${toughresources.dir}/build/lib/tough-resources-config.zip"></copy>
+    <copy todir="${external.lib}" file="${project.base.dir}/../${toughcore}/build/lib/tough-core.jar"></copy>
+
+    <copy todir="${external.lib}" file="${project.base.dir}/../${dasein-cloud-core}/build/lib/dasein-cloud-core.jar"></copy>
+  </target>
 
 
   <target name="compile.src" depends="init,copy-dependencies-dev, copy-dependencies-hudson">
