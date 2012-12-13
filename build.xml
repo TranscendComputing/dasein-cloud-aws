@@ -62,8 +62,6 @@
     <copy todir="${external}" file="${toughresources.dir}/build/lib/tough-resources.zip"></copy>
     <unzip dest="${external.lib}" src="${external}/tough-resources.zip"></unzip>
     <copy todir="${external}" file="${toughresources.dir}/build/lib/tough-resources-config.zip"></copy>
-    <copy todir="${external.lib}" file="${project.base.dir}/../${toughcore}/build/lib/tough-core.jar"></copy>
-
     <copy todir="${external.lib}" file="${project.base.dir}/../${dasein-cloud-core}/build/lib/dasein-cloud-core.jar"></copy>
   </target>
 
