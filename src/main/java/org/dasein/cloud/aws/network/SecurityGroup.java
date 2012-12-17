@@ -376,7 +376,7 @@ public class SecurityGroup implements FirewallSupport {
             else if( i == 0 && Character.isLetter(c) ) {
                 str.append(c);
             }
-            else if( i > 0 && (Character.isLetterOrDigit(c) || c == '-' || c == '_') ) {
+            else if((Character.isLetterOrDigit(c) || c == '-' || c == '_') ) {
                 str.append(c);
             }
         }
