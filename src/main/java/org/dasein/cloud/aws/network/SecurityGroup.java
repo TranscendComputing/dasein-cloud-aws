@@ -187,6 +187,64 @@ public class SecurityGroup implements FirewallSupport {
         }
     }
 
+	@Override
+	public @Nonnull
+	String authorize(@Nonnull String firewallId,
+			@Nullable String ingressFirewallId,
+			@Nullable String ingressFirewallOwnerId,
+			@Nonnull Protocol protocol, int beginPort, int endPort)
+			throws CloudException, InternalException {
+//		Logger logger = NovaOpenStack.getLogger(NovaSecurityGroup.class, "std");
+//
+//		if (logger.isTraceEnabled()) {
+//			logger.trace("ENTER: " + NovaSecurityGroup.class.getName()
+//					+ ".authorize(" + firewallId + "," + ingressFirewallId
+//					+ "," + ingressFirewallOwnerId + "," + protocol + ","
+//					+ beginPort + "," + endPort + ")");
+//		}
+//		try {
+//			ProviderContext ctx = provider.getContext();
+//
+//			if (ctx == null) {
+//				logger.error("No context exists for this request");
+//				throw new InternalException(
+//						"No context exists for this request");
+//			}
+//			HashMap<String, Object> wrapper = new HashMap<String, Object>();
+//			HashMap<String, Object> json = new HashMap<String, Object>();
+//			NovaMethod method = new NovaMethod(provider);
+//
+//			json.put("ip_protocol", protocol.name().toLowerCase());
+//			json.put("from_port", beginPort);
+//			json.put("to_port", endPort);
+//			json.put("parent_group_id", firewallId);
+//			json.put("group_id", ingressFirewallId);
+//			wrapper.put("security_group_rule", json);
+//			JSONObject result = method.postServers("/os-security-group-rules",
+//					null, new JSONObject(wrapper), false);
+//
+//			if (result != null && result.has("security_group_rule")) {
+//				try {
+//					JSONObject rule = result
+//							.getJSONObject("security_group_rule");
+//
+//					return rule.getString("id");
+//				} catch (JSONException e) {
+//					logger.error("Invalid JSON returned from rule creation: "
+//							+ e.getMessage());
+//					throw new CloudException(e);
+//				}
+//			}
+//			logger.error("authorize(): No firewall rule was created by the create attempt, and no error was returned");
+//			throw new CloudException("No firewall rule was created");
+//		} finally {
+//			if (logger.isTraceEnabled()) {
+//				logger.trace("EXIT: " + NovaSecurityGroup.class.getName()
+//						+ ".authorize()");
+//			}
+//		}
+		return null;
+	}
     @Override
 	public @Nonnull String create(@Nonnull String name, @Nonnull String description) throws InternalException, CloudException {
         APITrace.begin(provider, "createSecurityGroup");
@@ -439,7 +497,7 @@ public class SecurityGroup implements FirewallSupport {
             else if( i == 0 && Character.isLetter(c) ) {
                 str.append(c);
             }
-            else if( i > 0 && (Character.isLetterOrDigit(c) || c == '-' || c == '_') ) {
+            else if((Character.isLetterOrDigit(c) || c == '-' || c == '_') ) {
                 str.append(c);
             }
         }
