@@ -22,7 +22,6 @@
   <artifactId>dasein-cloud-aws</artifactId>
   <version>TRANSCEND.2012.09.4-SNAPSHOT</version>
   <packaging>jar</packaging>
-
   <name>dasein-cloud-aws</name>
   <description>
     Implementation of the Dasein Cloud API for AWS.
@@ -59,6 +58,7 @@
   </parent>
 
   <dependencies>
+      <!-- Compile -->
     <dependency>
         <groupId>org.dasein</groupId>
         <artifactId>dasein-cloud-core</artifactId>
@@ -83,13 +83,7 @@
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.2</version>
-    </dependency>
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.9</version>
-        <scope>test</scope>
+        <version>4.2.1</version>
     </dependency>
     <dependency>
         <groupId>log4j</groupId>
@@ -110,6 +104,21 @@
         <version>20090211</version>
         <scope>compile</scope>
     </dependency>
+
+      <!-- Test -->
+      <dependency>
+          <groupId>org.dasein</groupId>
+          <artifactId>dasein-cloud-test</artifactId>
+          <version>2013.04-SNAPSHOT</version>
+          <scope>test</scope>
+          <optional>false</optional>
+      </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.9</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 
   <build>
