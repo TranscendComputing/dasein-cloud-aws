@@ -29,6 +29,7 @@ import org.dasein.cloud.CloudException;
 import org.dasein.cloud.InternalException;
 import org.dasein.cloud.OperationNotSupportedException;
 import org.dasein.cloud.ProviderContext;
+import org.dasein.cloud.Requirement;
 import org.dasein.cloud.ResourceStatus;
 import org.dasein.cloud.aws.AWSCloud;
 import org.dasein.cloud.aws.compute.EC2Exception;
@@ -49,6 +50,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -89,12 +91,12 @@ public class SecurityGroup implements FirewallSupport {
 
     @Override
     public @Nonnull String authorize(@Nonnull String firewallId, @Nonnull Direction direction, @Nonnull String cidr, @Nonnull Protocol protocol, int beginPort, int endPort) throws CloudException, InternalException {
-        return authorize(firewallId, direction, Permission.ALLOW, cidr, protocol, RuleTarget.getGlobal(), beginPort, endPort);
+        return authorize(firewallId, direction, Permission.ALLOW, cidr, protocol, RuleTarget.getGlobal(""), beginPort, endPort);
     }
 
     @Override
     public @Nonnull String authorize(@Nonnull String firewallId, @Nonnull Direction direction, @Nonnull Permission permission, @Nonnull String cidr, @Nonnull Protocol protocol, int beginPort, int endPort) throws CloudException, InternalException {
-        return authorize(firewallId, direction, permission, cidr, protocol, RuleTarget.getGlobal(), beginPort, endPort);
+        return authorize(firewallId, direction, permission, cidr, protocol, RuleTarget.getGlobal(""), beginPort, endPort);
     }
 
     @Override
@@ -169,7 +171,7 @@ public class SecurityGroup implements FirewallSupport {
                 String code = e.getCode();
 
                 if( code != null && code.equals("InvalidPermission.Duplicate") ) {
-                    return FirewallRule.getInstance(null, firewallId, cidr, direction, protocol, Permission.ALLOW, RuleTarget.getGlobal(), beginPort, endPort).getProviderRuleId();
+                    return FirewallRule.getInstance(null, firewallId, cidr, direction, protocol, Permission.ALLOW, RuleTarget.getGlobal(""), beginPort, endPort).getProviderRuleId();
                 }
                 logger.error(e.getSummary());
                 throw new CloudException(e);
@@ -180,7 +182,7 @@ public class SecurityGroup implements FirewallSupport {
                     throw new CloudException("Failed to authorize security group rule without explanation.");
                 }
             }
-            return FirewallRule.getInstance(null, firewallId, cidr, direction, protocol, Permission.ALLOW, RuleTarget.getGlobal(), beginPort, endPort).getProviderRuleId();
+            return FirewallRule.getInstance(null, firewallId, cidr, direction, protocol, Permission.ALLOW, RuleTarget.getGlobal(""), beginPort, endPort).getProviderRuleId();
         }
         finally {
             APITrace.end();
@@ -699,17 +701,17 @@ public class SecurityGroup implements FirewallSupport {
 
 	@Override
 	public void revoke(@Nonnull String securityGroupId, @Nonnull String cidr, @Nonnull Protocol protocol, int startPort, int endPort) throws CloudException, InternalException {
-        revoke(securityGroupId, Direction.INGRESS, Permission.ALLOW, cidr, protocol, RuleTarget.getGlobal(), startPort, endPort);
+        revoke(securityGroupId, Direction.INGRESS, Permission.ALLOW, cidr, protocol, RuleTarget.getGlobal(""), startPort, endPort);
     }
 
     @Override
     public void revoke(@Nonnull String firewallId, @Nonnull Direction direction, @Nonnull String cidr, @Nonnull Protocol protocol, int beginPort, int endPort) throws CloudException, InternalException {
-        revoke(firewallId, direction, Permission.ALLOW, cidr, protocol, RuleTarget.getGlobal(), beginPort, endPort);
+        revoke(firewallId, direction, Permission.ALLOW, cidr, protocol, RuleTarget.getGlobal(""), beginPort, endPort);
     }
 
     @Override
     public void revoke(@Nonnull String firewallId, @Nonnull Direction direction, @Nonnull Permission permission, @Nonnull String cidr, @Nonnull Protocol protocol, int beginPort, int endPort) throws CloudException, InternalException {
-        revoke(firewallId, direction, permission, cidr, protocol, RuleTarget.getGlobal(), beginPort, endPort);
+        revoke(firewallId, direction, permission, cidr, protocol, RuleTarget.getGlobal(""), beginPort, endPort);
     }
 
     @Override
@@ -932,7 +934,7 @@ public class SecurityGroup implements FirewallSupport {
 			}
 		}
 		for( String cidr : cidrs ) {
-		    rules.add(FirewallRule.getInstance(null, securityGroupId, cidr, direction, protocol, Permission.ALLOW, RuleTarget.getGlobal(), startPort, endPort));
+		    rules.add(FirewallRule.getInstance(null, securityGroupId, cidr, direction, protocol, Permission.ALLOW, RuleTarget.getGlobal(""), startPort, endPort));
 		}
 		return rules;		
 	}
@@ -964,4 +966,55 @@ public class SecurityGroup implements FirewallSupport {
         }
         return new ResourceStatus(fwId, true);
     }
+
+	@Override
+	public @Nonnull
+	String authorize(@Nonnull String firewallId, @Nonnull Direction direction,
+			@Nonnull Permission permission, @Nonnull RuleTarget sourceEndpoint,
+			@Nonnull Protocol protocol,
+			@Nonnull RuleTarget destinationEndpoint, int beginPort,
+			int endPort, @Nonnegative int precedence) throws CloudException,
+			InternalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public @Nonnull
+	Requirement identifyPrecedenceRequirement(boolean inVlan)
+			throws InternalException, CloudException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isZeroPrecedenceHighest() throws InternalException,
+			CloudException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public @Nonnull
+	Iterable<Direction> listSupportedDirections(boolean inVlan)
+			throws InternalException, CloudException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public @Nonnull
+	Iterable<Permission> listSupportedPermissions(boolean inVlan)
+			throws InternalException, CloudException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public @Nonnull
+	Iterable<RuleTargetType> listSupportedSourceTypes(boolean inVlan)
+			throws InternalException, CloudException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1196,7 +1196,7 @@ public class EC2Instance implements VirtualMachineSupport {
 
                 for( String id : ids ) {
                     //parameters.put("SecurityGroupId." + (i++), id);
-                	parameters.put("SecurityGroup.",+ (i++), id);
+                	parameters.put("SecurityGroup." + (i++), id);
                 }
             }
             if( cfg.getDataCenterId() != null ) {
@@ -2233,4 +2233,20 @@ public class EC2Instance implements VirtualMachineSupport {
     public void updateTags(@Nonnull String vmId, @Nonnull Tag... tags) throws CloudException, InternalException {
         provider.createTags(vmId, tags);
     }
+
+	@Override
+	public @Nonnull
+	Requirement identifyPasswordRequirement(Platform platform)
+			throws CloudException, InternalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public @Nonnull
+	Requirement identifyShellKeyRequirement(Platform platform)
+			throws CloudException, InternalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

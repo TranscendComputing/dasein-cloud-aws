@@ -752,4 +752,11 @@ public class ElasticIP implements IpAddressSupport {
         }
         return new ResourceStatus(ipAddressId, instanceId == null && nicId == null);
     }
+
+	@Override
+	public boolean isAssignablePostLaunch(@Nonnull IPVersion version)
+			throws CloudException, InternalException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

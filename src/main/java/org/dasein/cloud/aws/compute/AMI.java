@@ -1899,4 +1899,12 @@ public class AMI implements MachineImageSupport {
 			task.complete(t);
 		}
 	}
+
+	@Override
+	public @Nonnull
+	String getProviderTermForCustomImage(@Nonnull Locale locale,
+			@Nonnull ImageClass cls) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

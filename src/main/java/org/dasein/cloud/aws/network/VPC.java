@@ -46,6 +46,7 @@ import org.dasein.cloud.network.IPVersion;
 import org.dasein.cloud.network.NICCreateOptions;
 import org.dasein.cloud.network.NICState;
 import org.dasein.cloud.network.NetworkInterface;
+import org.dasein.cloud.network.Networkable;
 import org.dasein.cloud.network.Route;
 import org.dasein.cloud.network.RoutingTable;
 import org.dasein.cloud.network.Subnet;
@@ -2441,5 +2442,13 @@ public class VPC implements VLANSupport {
         }
         return new ResourceStatus(vlanId, state);
     }
+
+	@Override
+	public @Nonnull
+	Iterable<Networkable> listResources(@Nonnull String inVlanId)
+			throws CloudException, InternalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
